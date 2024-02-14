@@ -1,7 +1,7 @@
- #  Password generator/ manager
- # 1) Ask user if they want to store or retrieve a password
- # 2) for store ask what for (google, website, etc) - then take their username/pwd and store in json or csv file
- # 3) if retrieving a pwd ask you ask them for what service and then you print all of the users and password with that,
+# Password generator/ manager
+# 1) Ask user if they want to store or retrieve a password
+# 2) for store ask what for (google, website, etc) - then take their username/pwd and store in json or csv file
+# 3) if retrieving a pwd ask you ask them for what service and then you print all of the users and password with that,
 # because you can have multiple saves accounts on one service.
 
 # Bonus tasks:
@@ -20,16 +20,14 @@ import db
 import os
 import sqlite3
 
-
-
- # import db  #we need to write the functions we'll want to call on the data base in the db file
+# import db  #we need to write the functions we'll want to call on the data base in the db file
 
 FILENAME = "add_creds.json"
 
 
 def derive(param):
     salt = b'\xa66k\xd6)\xe1\xef\xc4)\x1d\nl\xc3I\x19\xa5'
-    kdf = Scrypt(salt=salt, length=32, n=2**14, r=8, p=1)
+    kdf = Scrypt(salt=salt, length=32, n=2 ** 14, r=8, p=1)
 
     encrypt = kdf.derive(param.encode("utf-8"))
     return encrypt
@@ -60,13 +58,10 @@ def set_master_credentials():
     else:
         master_user_pwd = input("Create your master password: ")
         key = derive(master_user_pwd)
-# making a safeword so we don't store the encryption key in the db
+        # making a safeword so we don't store the encryption key in the db
         safeword = derive("gibberish " + master_user_pwd)
         db.new_user(key1, safeword)
     return key
-
-
-
 
 
 # //verifying the user and encrypted password, we'll use this later to allow us into actions
@@ -78,11 +73,7 @@ def verify_master_user():
         progress
 
 
-
-
-
-
-def encrypt(key,v):
+def encrypt(key, v):
     iv = os.urandom(16)
     cipher = Cipher(algorithms.AES(key), modes.CBC(iv))
     encryptor = cipher.encryptor()
@@ -94,8 +85,7 @@ def encrypt(key,v):
 
     ct = encryptor.update(padded_data) + encryptor.finalize()
 
-
-    return ct,iv
+    return ct, iv
 
 
 def decrypt(key, iv, ct):
@@ -110,12 +100,6 @@ def decrypt(key, iv, ct):
     return unpadded_text.decode("utf-8")
 
 
-
-
-
-
-
-
 def do_action():
     action = input("Do you want to Store, Retrieve, or Delete a password? S/R/D. Else Q to Quit: ").upper()
     return action
@@ -124,43 +108,39 @@ def do_action():
 # //creating an empty dict to interact with the json file
 user_dict = {}
 
+
 def add_creds():
-       get_site = input("What website is this for?: ").lower()
+    get_site = input("What website is this for?: ").lower()
 
-       get_login = input("enter your username: ")
+    get_login = input("enter your username: ")
 
-       get_pwd = input("enter your password: ")
-       # below updated the dict we oringially used but this isn't secure at all
-       # user_dict[get_site] = {"username": get_login,
-       #                         "password": get_pwd}
+    get_pwd = input("enter your password: ")
+    # below updated the dict we oringially used but this isn't secure at all
+    # user_dict[get_site] = {"username": get_login,
+    #                         "password": get_pwd}
 
+    db.write_to_db
 
-
-       db.write_to_db
-
-       #
-       # salt = b'\xb66k\xd6)\xe1\xef\xc4)\x1d\nl\xc3I\x19\xa5'
-       # kdf1 = Scrypt(salt=salt, length=32, n=2 ** 14, r=8, p=1)
-       # kdf2 = Scrypt(salt=salt, length=32, n=2 ** 14, r=8, p=1)
-       # kdf3 = Scrypt(salt=salt, length=32, n=2 ** 14, r=8, p=1)
-       #
-       # key1 = kdf1.derive(get_site.encode("utf-8"))
-       # key2 = kdf2.derive(get_login.encode("utf-8"))
-       # key3 = kdf3.derive(get_pwd.encode("utf-8"))
-       #(key1, key2, key3)
-       #
-       # kdf_verify1 = Scrypt(salt=salt, length=32, n=2 ** 14, r=8, p=1)
-       # kdf_verify2 = Scrypt(salt=salt, length=32, n=2 ** 14, r=8, p=1)
-       # kdf_verify3 = Scrypt(salt=salt, length=32, n=2 ** 14, r=8, p=1)
-       # verify_key_1 = kdf_verify1.verify(get_site.encode("utf-8"), key1)
-       # verify_key_2 = kdf_verify2.verify(get_login.encode("utf-8"), key2)
-       # verify_key_3 = kdf_verify3.verify(get_pwd.encode("utf-8"), key3)
+    #
+    # salt = b'\xb66k\xd6)\xe1\xef\xc4)\x1d\nl\xc3I\x19\xa5'
+    # kdf1 = Scrypt(salt=salt, length=32, n=2 ** 14, r=8, p=1)
+    # kdf2 = Scrypt(salt=salt, length=32, n=2 ** 14, r=8, p=1)
+    # kdf3 = Scrypt(salt=salt, length=32, n=2 ** 14, r=8, p=1)
+    #
+    # key1 = kdf1.derive(get_site.encode("utf-8"))
+    # key2 = kdf2.derive(get_login.encode("utf-8"))
+    # key3 = kdf3.derive(get_pwd.encode("utf-8"))
+    # (key1, key2, key3)
+    #
+    # kdf_verify1 = Scrypt(salt=salt, length=32, n=2 ** 14, r=8, p=1)
+    # kdf_verify2 = Scrypt(salt=salt, length=32, n=2 ** 14, r=8, p=1)
+    # kdf_verify3 = Scrypt(salt=salt, length=32, n=2 ** 14, r=8, p=1)
+    # verify_key_1 = kdf_verify1.verify(get_site.encode("utf-8"), key1)
+    # verify_key_2 = kdf_verify2.verify(get_login.encode("utf-8"), key2)
+    # verify_key_3 = kdf_verify3.verify(get_pwd.encode("utf-8"), key3)
 
 
-
-
-
-#// user interaction options for storing/retrieving/deleting etc credentials
+# // user interaction options for storing/retrieving/deleting etc credentials
 def main():
     while True:
         action = do_action()
@@ -176,10 +156,9 @@ def main():
             print("Invalid action. Please choose S(tore), R(etrieve), D(elete), or Q(uit).")
 
 
-
-
 # print(encrypt(derive("222"), "test"))
-print(decrypt(derive("222"), b'e\x8d8\x9a,\x8b+;j\x13\xcd$D\xc6\xbbC', b'\xf6\xb1\xb8\x9a!\x14\x05<?B\xc5\xaf0\xb8\xf0x'))
+print(
+    decrypt(derive("222"), b'e\x8d8\x9a,\x8b+;j\x13\xcd$D\xc6\xbbC', b'\xf6\xb1\xb8\x9a!\x14\x05<?B\xc5\xaf0\xb8\xf0x'))
 set_master_credentials()
 verify_master_user()
 encrypt()

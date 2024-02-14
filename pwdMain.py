@@ -87,24 +87,28 @@ def encrypt(key,v):
     cipher = Cipher(algorithms.AES(key), modes.CBC(iv))
     encryptor = cipher.encryptor()
     encodedValue = v.encode("utf-8")
+
     padder = padding.PKCS7(128).padder()
     padded_data = padder.update(encodedValue)
     padded_data += padder.finalize()
+
     ct = encryptor.update(padded_data) + encryptor.finalize()
 
-    print(len(padded_data))
+
     return ct,iv
 
 
 def decrypt(key, iv, ct):
     cipher = Cipher(algorithms.AES(key), modes.CBC(iv))
     decryptor = cipher.decryptor()
-    unpadder = padding.PKCS7(128).unpadder()
     decrypted_text = decryptor.update(ct) + decryptor.finalize()
-    unpadded_text = unpadder.update(decrypted_text) + unpadder.finalize()
-    # decryptor.update(ct)
 
-    return decryptor.update(ct) + decryptor.finalize()
+    # we padded the encrypted word above so must remove the padding or else we'll print gibberish as well
+    unpadder = padding.PKCS7(128).unpadder()
+    unpadded_text = unpadder.update(decrypted_text) + unpadder.finalize()
+
+    return unpadded_text.decode("utf-8")
+
 
 
 

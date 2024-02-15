@@ -5,12 +5,12 @@
 # because you can have multiple saves accounts on one service.
 
 # Bonus tasks:
-# 1) Make a master password, which you'll have to enter in order to access the choice to either storw or get a password.
+# 1) Make a master password, which you'll have to enter in order to access the choice to either store or get a password.
 # So if a user enters incorrect master password you don't let them in.
 # 2) Encrypt the passwords before saving and then decrypt them before printing them out, when the user requests them.
-# https://stackoverflow.com/questions/90413/what-is-the-best-easiest-to-use-encryption-library-in-python
-# 3) Use database to store passwords '
+# 3) Use database to store passwords
 # 4) Add user ability to delete credentials (CRUD maybe, please god hope you remember what this means)
+# this project uses a cool ascii art for the terminal interface https://github.com/Abhijeetbyte/MYPmanager/blob/main/main.py
 
 import cryptography
 from cryptography.hazmat.primitives.kdf.scrypt import Scrypt
@@ -178,12 +178,3 @@ encrypt()
 #     main()
 
 
-# PASSWORD HASHING WITH BCRPYT: https://www.geeksforgeeks.org/hashing-passwords-in-python-with-bcrypt/
-# this seems to just encrypt the password and then check a user input is the same by encrypting that and seeing if both
-# encrypted versions match. We need to encrypt and then decrypt the stored password. bcrypt may not be the best option
-# for this, needs some research.
-# this link may be the shiznit https://www.geeksforgeeks.org/how-to-encrypt-and-decrypt-strings-in-python/
-
-
-# Turnas said "what i'd do is AES-256 encryption for the passwords, and use a key derivation function on the master password to derive the key"
-# this project uses a cool ascii art for the terminal interface https://github.com/Abhijeetbyte/MYPmanager/blob/main/main.py

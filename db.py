@@ -48,10 +48,11 @@ res = cur.execute("""SELECT website, username, password FROM credentials""")
 # print(f"'{website}', '{username}', '{password}'")
 
 # inserting values into the table
-sql_query = """INSERT INTO credentials(website, username, password) VALUES (?, ?, ?)"""
-values = ('twitch', 'username', 'password')  # Replace these with the actual values you want to insert
-cur.execute(sql_query, values)
-conn.commit()
+
+# sql_query = """INSERT INTO credentials(website, username, password) VALUES (?, ?, ?)"""
+# values = ('twitch', 'username', 'password')  # Replace these with the actual values you want to insert
+# cur.execute(sql_query, values)
+# conn.commit()
 
 # turning the above into a function
 def write_to_db(get_site, get_login, get_pwd):
@@ -61,11 +62,12 @@ def write_to_db(get_site, get_login, get_pwd):
     cur.execute(sql_query, values)
     conn.commit()
 
-# table got cluttered from constant testing so this func clears all
+# # table got cluttered from constant testing so this func clears all
 # def cleanUp():
-#     clean = """DELETE FROM credentials;"""
+#     clean = """DELETE FROM master_credentials;"""
 #     cur.execute(clean)
 #     conn.commit()
+# cleanUp()
 
 
 # testing if we ran the program multiple times causing the f-string to have too many objects

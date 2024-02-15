@@ -62,12 +62,12 @@ def write_to_db(get_site, get_login, get_pwd):
     cur.execute(sql_query, values)
     conn.commit()
 
-# # table got cluttered from constant testing so this func clears all
-# def cleanUp():
-#     clean = """DELETE FROM master_credentials;"""
-#     cur.execute(clean)
-#     conn.commit()
-# cleanUp()
+# table got cluttered from constant testing so this func clears all
+def cleanUp():
+    clean = """DELETE FROM master_credentials;"""
+    cur.execute(clean)
+    conn.commit()
+
 
 
 # testing if we ran the program multiple times causing the f-string to have too many objects

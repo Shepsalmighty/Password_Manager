@@ -1,29 +1,3 @@
-# import yfinance as yf
-#
-#
-#
-#
-# def ma():
-#     pass
-#
-#
-# def ema():
-#     pass
-#
-# def wma():
-#     pass
-#
-#
-# def macd():
-#     pass
-#
-#
-# def rsi():
-#     pass
-#
-#
-# def vwap():
-#     pass
 
 # Password generator/ manager
 # 1) Ask user if they want to store or retrieve a password

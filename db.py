@@ -55,12 +55,29 @@ res = cur.execute("""SELECT website, username, password FROM credentials""")
 # conn.commit()
 
 # turning the above into a function
-def write_to_db(get_site, get_login, get_pwd):
+def write_to_db(key1, key2, key3):
     sql_query = """INSERT INTO credentials(website, username, password) VALUES (?, ?, ?)"""
     # values = (str(get_site), str(get_login), str(get_pwd))
     values = (key1, key2, key3)
     cur.execute(sql_query, values)
     conn.commit()
+
+def read_from_db(website):
+    sql_query = """SELECT website, username, password FROM credentials WHERE website = (?)"""
+    values = (website,)
+    cur.execute(sql_query, values)
+    row = cur.fetchone()
+    return website
+
+#
+# TODO: add ID column to master credentials as primary key, then ID to credentials as foreign key
+# def add_id():
+#     sql_query = """ALTER TABLE master_credentials ADD ID INT IDENTITY(1,1) NOT NULL"""
+#     cur.execute(sql_query)
+#     conn.commit()
+
+
+
 
 # table got cluttered from constant testing so this func clears all
 def cleanUp():

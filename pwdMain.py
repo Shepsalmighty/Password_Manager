@@ -1,3 +1,30 @@
+# import yfinance as yf
+#
+#
+#
+#
+# def ma():
+#     pass
+#
+#
+# def ema():
+#     pass
+#
+# def wma():
+#     pass
+#
+#
+# def macd():
+#     pass
+#
+#
+# def rsi():
+#     pass
+#
+#
+# def vwap():
+#     pass
+
 # Password generator/ manager
 # 1) Ask user if they want to store or retrieve a password
 # 2) for store ask what for (google, website, etc) - then take their username/pwd and store in json or csv file
@@ -22,7 +49,7 @@ import sqlite3
 
 # import db  #we need to write the functions we'll want to call on the data base in the db file
 
-FILENAME = "add_creds.json"
+
 
 
 def derive(param):
@@ -106,23 +133,17 @@ def do_action():
     return action
 
 
-# //creating an empty dict to interact with the json file
-user_dict = {}
-key = set_master_credentials()
 
-def add_creds():
+def add_creds(key):
     get_site = input("What website is this for?: ").lower()
 
     get_login = input("enter your username: ")
 
     get_pwd = input("enter your password: ")
-    # below updated the dict we oringially used but this isn't secure at all
-    # user_dict[get_site] = {"username": get_login,
-    #                         "password": get_pwd}
-    # get_key = set_master_credentials()
-    # key = set_master_credentials()
 
-    key1 = encrypt(key, get_site)
+# website not encrypted as will be used to reference master_users credentials
+# reducing the amount of data needed to be decrypted per user
+    key1 = get_site
     key2 = encrypt(key, get_login)
     key3 = encrypt(key, get_pwd)
 
@@ -135,11 +156,12 @@ def get_creds():
 
 # // user interaction options for storing/retrieving/deleting etc credentials
 def main():
-    # TODO: turnas wants up to add key=set_master_creds() and then have add_creds(key) call key
+    key = set_master_credentials()
+
     while True:
         action = do_action()
         if action == "S":
-            add_creds()
+            add_creds(key)
         elif action == "R":
             get_creds()
         # elif action == "D":

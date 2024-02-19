@@ -73,6 +73,7 @@ def verify_master_user():
         progress
 
 
+
 def encrypt(key, v):
     iv = os.urandom(16)
     cipher = Cipher(algorithms.AES(key), modes.CBC(iv))
@@ -107,7 +108,7 @@ def do_action():
 
 # //creating an empty dict to interact with the json file
 user_dict = {}
-
+key = set_master_credentials()
 
 def add_creds():
     get_site = input("What website is this for?: ").lower()
@@ -118,30 +119,23 @@ def add_creds():
     # below updated the dict we oringially used but this isn't secure at all
     # user_dict[get_site] = {"username": get_login,
     #                         "password": get_pwd}
+    # get_key = set_master_credentials()
+    # key = set_master_credentials()
 
-    db.write_to_db
+    key1 = encrypt(key, get_site)
+    key2 = encrypt(key, get_login)
+    key3 = encrypt(key, get_pwd)
 
-    #
-    # salt = b'\xb66k\xd6)\xe1\xef\xc4)\x1d\nl\xc3I\x19\xa5'
-    # kdf1 = Scrypt(salt=salt, length=32, n=2 ** 14, r=8, p=1)
-    # kdf2 = Scrypt(salt=salt, length=32, n=2 ** 14, r=8, p=1)
-    # kdf3 = Scrypt(salt=salt, length=32, n=2 ** 14, r=8, p=1)
-    #
-    # key1 = kdf1.derive(get_site.encode("utf-8"))
-    # key2 = kdf2.derive(get_login.encode("utf-8"))
-    # key3 = kdf3.derive(get_pwd.encode("utf-8"))
-    # (key1, key2, key3)
-    #
-    # kdf_verify1 = Scrypt(salt=salt, length=32, n=2 ** 14, r=8, p=1)
-    # kdf_verify2 = Scrypt(salt=salt, length=32, n=2 ** 14, r=8, p=1)
-    # kdf_verify3 = Scrypt(salt=salt, length=32, n=2 ** 14, r=8, p=1)
-    # verify_key_1 = kdf_verify1.verify(get_site.encode("utf-8"), key1)
-    # verify_key_2 = kdf_verify2.verify(get_login.encode("utf-8"), key2)
-    # verify_key_3 = kdf_verify3.verify(get_pwd.encode("utf-8"), key3)
+    db.write_to_db(str(key1), str(key2), str(key3))
+
+def get_creds():
+    pass
+
 
 
 # // user interaction options for storing/retrieving/deleting etc credentials
 def main():
+    # TODO: turnas wants up to add key=set_master_creds() and then have add_creds(key) call key
     while True:
         action = do_action()
         if action == "S":
@@ -159,10 +153,10 @@ def main():
 # print(encrypt(derive("222"), "test"))
 print(
     decrypt(derive("222"), b'e\x8d8\x9a,\x8b+;j\x13\xcd$D\xc6\xbbC', b'\xf6\xb1\xb8\x9a!\x14\x05<?B\xc5\xaf0\xb8\xf0x'))
-set_master_credentials()
-verify_master_user()
-encrypt()
-# main()
+# set_master_credentials()
+# verify_master_user()
+# encrypt(key, v)
+main()
 # add_creds()
 # continue_action()
 

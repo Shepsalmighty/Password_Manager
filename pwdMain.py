@@ -20,9 +20,8 @@ import db
 import os
 import sqlite3
 
+
 # import db  #we need to write the functions we'll want to call on the data base in the db file
-
-
 
 
 def derive(param):
@@ -64,7 +63,6 @@ ______                                   _
     
 Input master username: """)
 
-
     key1 = derive(user)
 
     user_check = db.user_exits(key1)
@@ -96,7 +94,6 @@ def verify_master_user():
         progress
 
 
-
 def encrypt(key, v):
     iv = os.urandom(16)
     cipher = Cipher(algorithms.AES(key), modes.CBC(iv))
@@ -112,20 +109,9 @@ def encrypt(key, v):
     return ct + iv
 
 
-# def decrypt(key, iv, ct):
-#     cipher = Cipher(algorithms.AES(key), modes.CBC(iv))
-#     decryptor = cipher.decryptor()
-#     decrypted_text = decryptor.update(ct) + decryptor.finalize()
-#
-#     # we padded the encrypted word above so must remove the padding or else we'll print gibberish as well
-#     unpadder = padding.PKCS7(128).unpadder()
-#     unpadded_text = unpadder.update(decrypted_text) + unpadder.finalize()
-#
-#     return unpadded_text.decode("utf-8")
-
 def decrypt(key, input_values):
     ct = input_values[0:-16]
-    iv= input_values[-16:]
+    iv = input_values[-16:]
     cipher = Cipher(algorithms.AES(key), modes.CBC(iv))
     decryptor = cipher.decryptor()
     decrypted_text = decryptor.update(ct) + decryptor.finalize()
@@ -142,7 +128,6 @@ def do_action():
     return action
 
 
-
 def add_creds(key, id):
     get_site = input("What website is this for?: ").lower()
 
@@ -150,8 +135,8 @@ def add_creds(key, id):
 
     get_pwd = input("enter your password: ")
 
-# website not encrypted as will be used to reference master_users credentials
-# reducing the amount of data needed to be decrypted per user
+    # website not encrypted as will be used to reference master_users credentials
+    # reducing the amount of data needed to be decrypted per user
     key1 = get_site
     key2 = encrypt(key, get_login)
     key3 = encrypt(key, get_pwd)
@@ -159,25 +144,28 @@ def add_creds(key, id):
     db.write_to_db(str(key1), key2, key3, id)
 
 
-
 def get_creds(key, id):
     site = input("Which site do you need your logins for?  ").lower()
     input_values = db.read_from_db(id, site)
 
-    username = decrypt(key, input_values[0])
-    password = decrypt(key, input_values[1])
+    if input_values is None:
+        print("no credentials stored for this site")
+    else:
+        username = decrypt(key, input_values[0])
+        password = decrypt(key, input_values[1])
+        print(f"{username, password}")
 
-    print(f"{username, password}")
 
+def delete_creds(id):
+    site = input("Which website's info would you like to delete? ").lower()
+    db.delete_row(id, site)
 
-
-
+    print("credentials successfully deleted")
 
 
 # // user interaction options for storing/retrieving/deleting etc credentials
 def main():
     key, id = set_master_credentials()
-
 
     while True:
         action = do_action()
@@ -185,8 +173,8 @@ def main():
             add_creds(key, id)
         elif action == "R":
             get_creds(key, id)
-        # elif action == "D":
-        #     delete_credentials()
+        elif action == "D":
+            delete_creds(id)
         elif action == "Q":
             break  # Exit the loop
         else:
@@ -213,5 +201,3 @@ main()
 
 # if __name__ == "__main__":
 #     main()
-
-

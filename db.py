@@ -1,4 +1,5 @@
 import sqlite3
+
 # import pwdMain
 
 db_file = "pwd_Manager_DB.sqlite"
@@ -8,9 +9,11 @@ conn = sqlite3.connect(f"{db_file}")
 cur = conn.cursor()
 
 # creating master log in table for user login info
-create_master_table = cur.execute("CREATE TABLE IF NOT EXISTS master_credentials(username, password, ID, PRIMARY KEY (ID))")
+create_master_table = cur.execute(
+    "CREATE TABLE IF NOT EXISTS master_credentials(username, password, ID, PRIMARY KEY (ID))")
 
-#Confirm master user exists in pwdMain to allow users to login otherwise create user and login
+
+# Confirm master user exists in pwdMain to allow users to login otherwise create user and login
 def user_exits(user):
     sql_query = """SELECT username, ID FROM master_credentials WHERE username = (?)"""
     values = (user,)
@@ -21,6 +24,7 @@ def user_exits(user):
     # using else return False to ensure no Null value is returned
     else:
         return False
+
 
 def get_ID(user):
     sql_query = """SELECT ID FROM master_credentials WHERE username = (?)"""
@@ -43,11 +47,12 @@ def new_user(key1, key2):
     cur.execute(update_db, new_user_values)
     conn.commit()
 
+
 # creating the table to input user credtials (will only be called once as once it exists no need to create again)
 create_table = cur.execute("""CREATE TABLE IF NOT EXISTS credentials(website, username, password)""")
 
-
 res = cur.execute("""SELECT website, username, password FROM credentials""")
+
 
 # data fetches the first line/row from credentials table
 # data = res.fetchone()
@@ -72,8 +77,9 @@ def write_to_db(key1, key2, key3, id):
 def read_from_db(id, site):
     sql_query = """SELECT username, password FROM credentials WHERE masterID = (?) and website = (?)"""
     values = (id, site,)
-    cur.execute(sql_query, values,)
+    cur.execute(sql_query, values, )
     return cur.fetchone()
+
 
 #
 
@@ -84,26 +90,20 @@ def add_id():
     cur.execute(sql_query)
     conn.commit()
 
+
 def changes():
     sql_query = """UPDATE master_credentials SET ID=NULL"""
     cur.execute(sql_query)
     conn.commit()
 
+
 # changes()
-# TODO: get delete row function working for delete_creds
-# def delete_row():
-#     sql_query = """DELETE FROM credentials WHERE ID = (?) and website = (?)"""
-#     values = (ID, website,)
-#     cur.execute(sql_query, values)
-#     conn.commit()
 
-# def add_rowID():
-#     sql_query = """INSERT INTO credentials ADD COLUMN masterID INTEGER REFERENCES master_credentials(ID)"""
-#     # ID INT IDENTITY(1,1) NOT NULL"""
-#     # ALTER TABLE child ADD COLUMN parent_id INTEGER REFERENCES parent(id
-#     cur.execute(sql_query)
-#     conn.commit()
-
+def delete_row(id, site):
+    sql_query = """DELETE FROM credentials WHERE masterID = (?) and website = (?)"""
+    values = (id, site,)
+    cur.execute(sql_query, values)
+    conn.commit()
 
 
 # table got cluttered from constant testing so this func clears all
@@ -111,6 +111,7 @@ def cleanUp():
     clean = """DELETE FROM master_credentials;"""
     cur.execute(clean)
     conn.commit()
+
 
 # cleanUp()
 def drop_a_fool():
@@ -126,9 +127,7 @@ def drop_a_fool():
 #     print(row)
 
 
-
 # if __name__ == '__main__':
 #     create_connection(r"C:\Users\Sheps (Inverted PC)\Desktop\code\pwd_Manager_DB.sqlite")
 
 # Using https://docs.python.org/3/library/sqlite3.html
-

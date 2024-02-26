@@ -71,7 +71,26 @@ def verify(param, user):
 # //User should input their username and pwd to gain access to all of their stored credentials IF NONE EXITS ALREADY
 def set_master_credentials():
     # //get user inputs for username + pwd
-    user = input("Input master username: ")
+    user = input(""" 
+Welcome to your
+______                                   _  
+| ___ \                                 | | 
+| |_/ /_ _ ___ _____      _____  _ __ __| | 
+|  __/ _` / __/ __\ \ /\ / / _ \| '__/ _` | 
+| | | (_| \__ \__  \ V  V / (_) | | | (_| | 
+\_|  \__,_|___/___/ \_/\_/ \___/|_|  \__,_|                                                                                  
+ ___  ___                                   
+ |  \/  |                                   
+ | .  . | __ _ _ __   __ _  __ _  ___ _ __  
+ | |\/| |/ _` | '_ \ / _` |/ _` |/ _ \ '__| 
+ | |  | | (_| | | | | (_| | (_| |  __/ |    
+ \_|  |_/\__,_|_| |_|\__,_|\__, |\___|_|    
+                            __/ |           
+                           |___/                             
+    
+    
+Input master username: """)
+
 
     key1 = derive(user)
 
@@ -82,13 +101,17 @@ def set_master_credentials():
         safeword = "gibberish " + master_user_pwd
         verify(safeword, db.get_password(key1))
         key = derive(master_user_pwd)
+
     else:
         master_user_pwd = input("Create your master password: ")
         key = derive(master_user_pwd)
         # making a safeword so we don't store the encryption key in the db
         safeword = derive("gibberish " + master_user_pwd)
         db.new_user(key1, safeword)
-    return key
+
+    id = db.get_ID(key1)
+
+    return key, id
 
 
 # //verifying the user and encrypted password, we'll use this later to allow us into actions
@@ -113,10 +136,23 @@ def encrypt(key, v):
 
     ct = encryptor.update(padded_data) + encryptor.finalize()
 
-    return ct, iv
+    return ct + iv
 
 
-def decrypt(key, iv, ct):
+# def decrypt(key, iv, ct):
+#     cipher = Cipher(algorithms.AES(key), modes.CBC(iv))
+#     decryptor = cipher.decryptor()
+#     decrypted_text = decryptor.update(ct) + decryptor.finalize()
+#
+#     # we padded the encrypted word above so must remove the padding or else we'll print gibberish as well
+#     unpadder = padding.PKCS7(128).unpadder()
+#     unpadded_text = unpadder.update(decrypted_text) + unpadder.finalize()
+#
+#     return unpadded_text.decode("utf-8")
+
+def decrypt(key, input_values):
+    ct = input_values[0:-16]
+    iv= input_values[-16:]
     cipher = Cipher(algorithms.AES(key), modes.CBC(iv))
     decryptor = cipher.decryptor()
     decrypted_text = decryptor.update(ct) + decryptor.finalize()
@@ -134,7 +170,7 @@ def do_action():
 
 
 
-def add_creds(key):
+def add_creds(key, id):
     get_site = input("What website is this for?: ").lower()
 
     get_login = input("enter your username: ")
@@ -147,23 +183,36 @@ def add_creds(key):
     key2 = encrypt(key, get_login)
     key3 = encrypt(key, get_pwd)
 
-    db.write_to_db(str(key1), str(key2), str(key3))
 
-def get_creds():
-    pass
+
+    db.write_to_db(str(key1), key2, key3, id)
+
+
+def get_creds(key, id):
+    site = input("Which site do you need your logins for?  ").lower()
+    input_values = db.read_from_db(id, site)
+
+    username = decrypt(key, input_values[0])
+    password = decrypt(key, input_values[1])
+
+    print(f"{username, password}")
+
+
+
 
 
 
 # // user interaction options for storing/retrieving/deleting etc credentials
 def main():
-    key = set_master_credentials()
+    key, id = set_master_credentials()
+
 
     while True:
         action = do_action()
         if action == "S":
-            add_creds(key)
+            add_creds(key, id)
         elif action == "R":
-            get_creds()
+            get_creds(key, id)
         # elif action == "D":
         #     delete_credentials()
         elif action == "Q":
@@ -173,8 +222,8 @@ def main():
 
 
 # print(encrypt(derive("222"), "test"))
-print(
-    decrypt(derive("222"), b'e\x8d8\x9a,\x8b+;j\x13\xcd$D\xc6\xbbC', b'\xf6\xb1\xb8\x9a!\x14\x05<?B\xc5\xaf0\xb8\xf0x'))
+# print(
+#     decrypt(derive("222"), b'e\x8d8\x9a,\x8b+;j\x13\xcd$D\xc6\xbbC', b'\xf6\xb1\xb8\x9a!\x14\x05<?B\xc5\xaf0\xb8\xf0x'))
 # set_master_credentials()
 # verify_master_user()
 # encrypt(key, v)

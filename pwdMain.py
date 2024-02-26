@@ -1,30 +1,3 @@
-# import yfinance as yf
-#
-#
-#
-#
-# def ma():
-#     pass
-#
-#
-# def ema():
-#     pass
-#
-# def wma():
-#     pass
-#
-#
-# def macd():
-#     pass
-#
-#
-# def rsi():
-#     pass
-#
-#
-# def vwap():
-#     pass
-
 # Password generator/ manager
 # 1) Ask user if they want to store or retrieve a password
 # 2) for store ask what for (google, website, etc) - then take their username/pwd and store in json or csv file
@@ -182,8 +155,6 @@ def add_creds(key, id):
     key1 = get_site
     key2 = encrypt(key, get_login)
     key3 = encrypt(key, get_pwd)
-
-
 
     db.write_to_db(str(key1), key2, key3, id)
 

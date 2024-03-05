@@ -12,6 +12,9 @@ cur = conn.cursor()
 create_master_table = cur.execute(
     "CREATE TABLE IF NOT EXISTS master_credentials(username, password, ID, PRIMARY KEY (ID))")
 
+create_creds_table = cur.exectute(
+    "CREATE TABLE IF NOT EXISTS credentials(website, username, password, masterID)")
+
 
 # Confirm master user exists in pwdMain to allow users to login otherwise create user and login
 def user_exits(user):
@@ -53,18 +56,6 @@ create_table = cur.execute("""CREATE TABLE IF NOT EXISTS credentials(website, us
 
 res = cur.execute("""SELECT website, username, password FROM credentials""")
 
-
-# data fetches the first line/row from credentials table
-# data = res.fetchone()
-# website, username, password = data
-# print(f"'{website}', '{username}', '{password}'")
-
-# inserting values into the table
-
-# sql_query = """INSERT INTO credentials(website, username, password) VALUES (?, ?, ?)"""
-# values = ('twitch', 'username', 'password')  # Replace these with the actual values you want to insert
-# cur.execute(sql_query, values)
-# conn.commit()
 
 # turning the above into a function
 def write_to_db(key1, key2, key3, id):
@@ -120,14 +111,4 @@ def drop_a_fool():
     conn.commit()
 
 # drop_a_fool()
-#
-# add_id()
-# testing if we ran the program multiple times causing the f-string to have too many objects
-# for row in data:
-#     print(row)
 
-
-# if __name__ == '__main__':
-#     create_connection(r"C:\Users\Sheps (Inverted PC)\Desktop\code\pwd_Manager_DB.sqlite")
-
-# Using https://docs.python.org/3/library/sqlite3.html

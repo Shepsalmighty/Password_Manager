@@ -1,17 +1,3 @@
-# Password generator/ manager
-# 1) Ask user if they want to store or retrieve a password
-# 2) for store ask what for (google, website, etc) - then take their username/pwd and store in json or csv file
-# 3) if retrieving a pwd ask you ask them for what service and then you print all of the users and password with that,
-# because you can have multiple saves accounts on one service.
-
-# Bonus tasks:
-# 1) Make a master password, which you'll have to enter in order to access the choice to either store or get a password.
-# So if a user enters incorrect master password you don't let them in.
-# 2) Encrypt the passwords before saving and then decrypt them before printing them out, when the user requests them.
-# 3) Use database to store passwords
-# 4) Add user ability to delete credentials (CRUD maybe, please god hope you remember what this means)
-# this project uses a cool ascii art for the terminal interface https://github.com/Abhijeetbyte/MYPmanager/blob/main/main.py
-
 import cryptography
 from cryptography.hazmat.primitives.kdf.scrypt import Scrypt
 from cryptography.hazmat.primitives.ciphers import Cipher, algorithms, modes
@@ -20,8 +6,6 @@ import db
 import os
 import sqlite3
 
-
-# import db  #we need to write the functions we'll want to call on the data base in the db file
 
 
 def derive(param):
@@ -39,7 +23,7 @@ def verify(param, user):
     kdf.verify(param.encode("utf-8"), user)
 
 
-#
+
 # //User should input their username and pwd to gain access to all of their stored credentials IF NONE EXITS ALREADY
 def set_master_credentials():
     # //get user inputs for username + pwd
@@ -181,22 +165,8 @@ def main():
             print("Invalid action. Please choose S(tore), R(etrieve), D(elete), or Q(uit).")
 
 
-# print(encrypt(derive("222"), "test"))
-# print(
-#     decrypt(derive("222"), b'e\x8d8\x9a,\x8b+;j\x13\xcd$D\xc6\xbbC', b'\xf6\xb1\xb8\x9a!\x14\x05<?B\xc5\xaf0\xb8\xf0x'))
-# set_master_credentials()
-# verify_master_user()
-# encrypt(key, v)
+
 main()
-# add_creds()
-# continue_action()
-
-# write_data_json()
-# # read_creds = read_user_json()
-#
-# print(read_creds)
-
-# get_creds(do_action())
 
 
 # if __name__ == "__main__":
